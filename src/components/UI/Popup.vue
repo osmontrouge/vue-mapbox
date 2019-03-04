@@ -95,6 +95,11 @@ export default {
     onlyText: {
       type: Boolean,
       default: false
+    },
+
+    showed: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -118,31 +123,36 @@ export default {
     }
   },
 
-  created() {
-    this.popup = new this.mapbox.Popup(this.$props);
-  },
-
   mounted() {
-    this.$_addPopup();
+    this.$_createPopup();
+    if (this.showed) {
+      this.$_addPopup();
+    }
     this.initial = false;
   },
 
   beforeDestroy() {
-    if (this.map) {
-      this.popup.remove();
-      this.$_emitEvent("removed");
-    }
+    this.popup.remove();
   },
 
   watch: {
     coordinates(lngLat) {
       if (this.initial) return;
       this.popup.setLngLat(lngLat);
+    },
+    showed(next, prev) {
+      if (next !== prev) {
+        if (next) {
+          this.$_addPopup();
+        } else {
+          this.remove();
+        }
+      }
     }
   },
 
   methods: {
-    $_addPopup() {
+    $_createPopup() {
       this.popup = new this.mapbox.Popup(this.$props);
       if (this.coordinates !== undefined) {
         this.popup.setLngLat(this.coordinates);
@@ -160,9 +170,16 @@ export default {
           this.popup.setDOMContent(this.$slots.default[0].elm);
         }
       }
-      this.popup.addTo(this.map);
 
       this.$_bindSelfEvents(Object.keys(popupEvents), this.popup);
+
+      if (this.marker) {
+        this.marker.setPopup(this.popup);
+      }
+    },
+
+    $_addPopup() {
+      this.popup.addTo(this.map);
 
       this.$_emitEvent("added", { popup: this.popup });
 
@@ -177,7 +194,7 @@ export default {
 
     remove() {
       this.popup.remove();
-      this.$_emitEvent("remove", { popup: this.popup });
+      this.$_emitEvent("removed");
     }
   }
 };
