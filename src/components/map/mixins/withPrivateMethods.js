@@ -74,6 +74,20 @@ export default {
       });
     },
 
+    $_bindLayerEvents(layerEvents) {
+      Object.keys(this.$listeners).forEach(eventName => {
+        if (eventName.includes("-")) {
+          let [eventName2, ...layer] = eventName.split("-");
+          if (layerEvents.includes(eventName2)) {
+            this.map.on(eventName2, layer.join("-"), event => {
+              event.type = eventName;
+              this.$_emitMapEvent(event);
+            });
+          }
+        }
+      });
+    },
+
     $_unbindEvents(events) {
       events.forEach(eventName => {
         this.map.off(eventName, this.$_emitMapEvent);

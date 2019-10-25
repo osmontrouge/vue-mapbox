@@ -7,6 +7,7 @@
 
 <script>
 import withEvents from "../../lib/withEvents";
+import layerEvents from "../../lib/layerEvents";
 import mapEvents from "./events";
 import options from "./options";
 import withWatchers from "./mixins/withWatchers";
@@ -94,6 +95,7 @@ export default {
       }
       const eventNames = Object.keys(mapEvents);
       this.$_bindMapEvents(eventNames);
+      this.$_bindLayerEvents(layerEvents);
       this.$_registerAsyncActions(map);
       this.$_bindPropsUpdateEvents();
       this.initial = false;
