@@ -2508,6 +2508,9 @@ function _objectSpread(target) {
   styledataloading: {
     name: "styledataloading"
   },
+  styleimagemissing: {
+    name: "styleimagemissing"
+  },
   moveend: {
     name: "moveend"
   },
