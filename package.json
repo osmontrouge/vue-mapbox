@@ -36,7 +36,7 @@
     "map-promisified": "latest"
   },
   "peerDependencies": {
-    "mapbox-gl": "^0.53.0",
+    "mapbox-gl": "<2.0.0",
     "vue": "^2.6.6"
   },
   "devDependencies": {
