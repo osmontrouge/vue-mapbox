@@ -2348,12 +2348,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"47f5d000-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/map/GlMap.vue?vue&type=template&id=54621512&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"47f5d000-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/map/GlMap.vue?vue&type=template&id=506534f2&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"mgl-map-wrapper"},[_vm._m(0),(_vm.initialized)?_vm._t("default"):_vm._e()],2)}
 var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"container",attrs:{"id":_vm.container}})}]
 
 
-// CONCATENATED MODULE: ./src/components/map/GlMap.vue?vue&type=template&id=54621512&
+// CONCATENATED MODULE: ./src/components/map/GlMap.vue?vue&type=template&id=506534f2&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__("ac6a");
@@ -2433,6 +2433,8 @@ function _objectSpread(target) {
     }
   }
 });
+// CONCATENATED MODULE: ./src/lib/layerEvents.js
+/* harmony default export */ var lib_layerEvents = (["mousedown", "mouseup", "click", "dblclick", "mousemove", "mouseenter", "mouseleave", "mouseover", "mouseout", "contextmenu", "touchstart", "touchend", "touchcancel"]);
 // CONCATENATED MODULE: ./src/components/map/events.js
 /* eslint-disable key-spacing */
 /* harmony default export */ var events = ({
@@ -2854,7 +2856,28 @@ function makeWatchers() {
 /* harmony default export */ var withWatchers = ({
   watch: makeWatchers()
 });
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/iterableToArray.js
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toArray.js
+
+
+
+function _toArray(arr) {
+  return _arrayWithHoles(arr) || _iterableToArray(arr) || _nonIterableRest();
+}
 // CONCATENATED MODULE: ./src/components/map/mixins/withPrivateMethods.js
+
+
 
 
 
@@ -2942,11 +2965,31 @@ function makeWatchers() {
         }
       });
     },
-    $_unbindEvents: function $_unbindEvents(events) {
+    $_bindLayerEvents: function $_bindLayerEvents(layerEvents) {
       var _this5 = this;
 
+      Object.keys(this.$listeners).forEach(function (eventName) {
+        if (eventName.includes("-")) {
+          var _eventName$split = eventName.split("-"),
+              _eventName$split2 = _toArray(_eventName$split),
+              eventName2 = _eventName$split2[0],
+              layer = _eventName$split2.slice(1);
+
+          if (layerEvents.includes(eventName2)) {
+            _this5.map.on(eventName2, layer.join("-"), function (event) {
+              event.type = eventName;
+
+              _this5.$_emitMapEvent(event);
+            });
+          }
+        }
+      });
+    },
+    $_unbindEvents: function $_unbindEvents(events) {
+      var _this6 = this;
+
       events.forEach(function (eventName) {
-        _this5.map.off(eventName, _this5.$_emitMapEvent);
+        _this6.map.off(eventName, _this6.$_emitMapEvent);
       });
     }
   }
@@ -3001,6 +3044,7 @@ var external_commonjs_map_promisified_commonjs2_map_promisified_amd_map_promisif
 //
 //
 //
+
 
 
 
@@ -3083,6 +3127,8 @@ var external_commonjs_map_promisified_commonjs2_map_promisified_amd_map_promisif
       var eventNames = Object.keys(events);
 
       _this.$_bindMapEvents(eventNames);
+
+      _this.$_bindLayerEvents(lib_layerEvents);
 
       _this.$_registerAsyncActions(map);
 
@@ -3872,8 +3918,6 @@ Popup_component.options.__file = "Popup.vue"
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
 var es6_regexp_replace = __webpack_require__("a481");
 
-// CONCATENATED MODULE: ./src/lib/layerEvents.js
-/* harmony default export */ var layerEvents = (["mousedown", "mouseup", "click", "dblclick", "mousemove", "mouseenter", "mouseleave", "mouseover", "mouseout", "contextmenu", "touchstart", "touchend", "touchcancel"]);
 // CONCATENATED MODULE: ./src/components/layer/layerMixin.js
 
 
@@ -4208,7 +4252,7 @@ var componentProps = {
       }
 
       this.$_addLayer();
-      this.$_bindLayerEvents(layerEvents);
+      this.$_bindLayerEvents(lib_layerEvents);
       this.map.off("dataloading", this.$_watchSourceLoading);
       this.initial = false;
     },
@@ -4324,7 +4368,7 @@ var componentProps = {
       }
 
       this.$_addLayer();
-      this.$_bindLayerEvents(layerEvents);
+      this.$_bindLayerEvents(lib_layerEvents);
       this.initial = false;
     },
     $_addLayer: function $_addLayer() {
@@ -4405,7 +4449,7 @@ var componentProps = {
       }
 
       this.$_addLayer();
-      this.$_bindLayerEvents(layerEvents);
+      this.$_bindLayerEvents(lib_layerEvents);
       this.initial = false;
     },
     $_addLayer: function $_addLayer() {
@@ -4477,7 +4521,7 @@ var componentProps = {
       }
 
       this.$_addLayer();
-      this.$_bindLayerEvents(layerEvents);
+      this.$_bindLayerEvents(lib_layerEvents);
       this.initial = false;
     },
     $_addLayer: function $_addLayer() {
@@ -4572,7 +4616,7 @@ var componentProps = {
       }
 
       this.$_addLayer();
-      this.$_bindLayerEvents(layerEvents);
+      this.$_bindLayerEvents(lib_layerEvents);
       this.map.off("dataloading", this.$_watchSourceLoading);
       this.initial = false;
     },
@@ -4651,7 +4695,7 @@ var componentProps = {
       }
 
       this.$_addLayer();
-      this.$_bindLayerEvents(layerEvents);
+      this.$_bindLayerEvents(lib_layerEvents);
       this.map.off("dataloading", this.$_watchSourceLoading);
       this.initial = false;
     },
